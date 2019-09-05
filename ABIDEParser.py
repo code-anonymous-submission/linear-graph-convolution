@@ -64,7 +64,7 @@ def get_networks(subject_list, kind, atlas_name="aal", variable='connectivity'):
     all_networks=np.array(all_networks)
 
     idx = np.triu_indices_from(all_networks[0], 1)
-    norm_networks = [np.arctanh(mat) for mat in all_networks]
+    norm_networks = [mat for mat in all_networks]
     vec_networks = [mat[idx] for mat in norm_networks]
     matrix = np.vstack(vec_networks)
     

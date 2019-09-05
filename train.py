@@ -107,7 +107,6 @@ def SGC_main(adj, features, labels, epochs, lr, dropout, weight_decay, use_relu,
                                                     features[idx_val], labels[idx_val])
     
     acc_test = test_regression(model, features[idx_test], labels[idx_test])
-    print("Test Accuracy: {:.4f}".format(acc_test))
 
     return acc_val, acc_test
 
@@ -126,6 +125,8 @@ def k_fold_run():
     fold_acc_list = []
     fold_time_list = []
 
+    cur_fold = 1
+
     for train_index, test_index in skf.split(X, y):
 
         X_train, X_test = X[train_index], X[test_index]
@@ -135,11 +136,16 @@ def k_fold_run():
         idx_test = torch.LongTensor(X_test)
         
         start_time = time.time()
+        
         acc_val, acc_test = SGC_main(adj, features, labels,
                                      args.epochs, args.lr, 
                                      args.dropout, args.weight_decay, 
                                      args.use_relu,
-                                     idx_train, idx_test, idx_test) 
+                                     idx_train, idx_test, idx_test)
+        
+        print("Fold #{:2} - Test Accuracy: {:.2f}%".format(cur_fold, acc_test*100))
+        cur_fold += 1 
+
         end_time = time.time() - start_time
         fold_acc_list.append(acc_test.item())
         fold_time_list.append(end_time)
@@ -147,5 +153,5 @@ def k_fold_run():
     return fold_acc_list, fold_time_list
 
 fold_acc_list, fold_time_list = k_fold_run()
-print("Average accuracy over {} folds: {:.2f}+-{:.2f}".format(args.folds, np.mean(fold_acc_list)*100, np.std(fold_acc_list)*100))
-print("Average time over {} folds: {:.2f}+-{:.2f}".format(args.folds, np.mean(fold_time_list), np.std(fold_time_list)))
+print("Average accuracy over {} folds: {:.2f}%".format(args.folds, np.mean(fold_acc_list)*100))
+print("Average time over {} folds: {:.2f}s".format(args.folds, np.mean(fold_time_list)))

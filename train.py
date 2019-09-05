@@ -147,5 +147,5 @@ def k_fold_run():
     return fold_acc_list, fold_time_list
 
 fold_acc_list, fold_time_list = k_fold_run()
-print("Average accuracy over {} folds: {:.4f}+-{:.2f}".format(args.folds, np.mean(fold_acc_list)*100, np.std(fold_acc_list)*100))
+print("Average accuracy over {} folds: {:.2f}+-{:.2f}".format(args.folds, np.mean(fold_acc_list)*100, np.std(fold_acc_list)*100))
 print("Average time over {} folds: {:.2f}+-{:.2f}".format(args.folds, np.mean(fold_time_list), np.std(fold_time_list)))

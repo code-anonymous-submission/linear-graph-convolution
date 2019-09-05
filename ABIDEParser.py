@@ -10,10 +10,6 @@ import csv
 import numpy as np
 import scipy.io as sio
 
-from sklearn.linear_model import RidgeClassifier
-from sklearn.feature_selection import RFE
-from nilearn import connectome
-
 # Selected pipeline
 pipeline = 'cpac'
 

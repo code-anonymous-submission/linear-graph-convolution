@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 from scipy.spatial import distance
 from sklearn.model_selection import StratifiedKFold
-from utils import load_ABIDE, get_labels
+from ABIDEParser import load_ABIDE, get_labels
 
 import time
 from time import perf_counter
@@ -22,8 +22,6 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--no-cuda', action='store_true', default=False,
                     help='Disables CUDA training.')
-parser.add_argument('--fastmode', action='store_true', default=False,
-                    help='Validate during training pass.')
 parser.add_argument('--seed', type=int, default=123, help='Random seed.')
 parser.add_argument('--epochs', type=int, default=2000,
                     help='Number of epochs to train.')

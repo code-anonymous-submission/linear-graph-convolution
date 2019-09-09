@@ -73,8 +73,8 @@ def SGC_main(adj, features, labels, epochs, lr, dropout, weight_decay, use_relu,
     def train_regression(model,
                          train_features, train_labels,
                          val_features, val_labels,
-                         epochs=args.epochs, weight_decay=args.weight_decay,
-                         lr=args.lr, dropout=args.dropout):
+                         epochs = args.epochs, weight_decay = args.weight_decay,
+                         lr = args.lr, dropout = args.dropout):
         
         t = perf_counter()
         for epoch in range(epochs):
@@ -140,11 +140,11 @@ def k_fold_run():
                                      args.dropout, args.weight_decay, 
                                      args.use_relu,
                                      idx_train, idx_test, idx_test)
-        
+        end_time = time.time() - start_time
+
         print("Fold #{:2} - Test Accuracy: {:.2f}%".format(cur_fold, acc_test*100))
         cur_fold += 1 
-
-        end_time = time.time() - start_time
+        
         fold_acc_list.append(acc_test.item())
         fold_time_list.append(end_time)
         

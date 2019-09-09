@@ -1,4 +1,5 @@
-# Part of the code is adopted from https://github.com/parisots/population-gcn
+#Part of the code in ABIDEParser.py is adopted from https://github.com/parisots/population-gcn
+
 import os
 import csv
 import numpy as np
@@ -85,10 +86,10 @@ feat_length = len(feature_names)
 
 def get_phenot_vector(subj_id):
 
-    sites = np.array(['PITT', 'OLIN', 'OHSU', 'SDSU', 'TRINITY', 'UM_1', 'UM_2', 'USM',
-       'YALE', 'CMU', 'LEUVEN_1', 'LEUVEN_2', 'KKI', 'NYU', 'STANFORD',
-       'UCLA_1', 'UCLA_2', 'MAX_MUN', 'CALTECH', 'SBL'])
-
+    subject_IDs = get_ids()
+    sites = get_subject_score(subject_IDs, score='SITE_ID')
+    sites = np.array(np.unique(list(sites.values())))   
+    
     root_folder = os.path.dirname(os.path.abspath(__file__))
     phenotype = os.path.join(root_folder, 'ABIDE_pcp/Phenotypic_V1_0b_preprocessed1.csv')
     
@@ -133,30 +134,13 @@ def load_ABIDE(graph_type):
    
     # Get class labels
     subject_IDs = get_ids()                                   
-    labels = get_subject_score(subject_IDs, score='DX_GROUP') 
-    
-    # Get acquisition site
-    sites = get_subject_score(subject_IDs, score='SITE_ID')   
-    unique = np.unique(list(sites.values())).tolist()               
-    
-    num_classes = 2
+    labels = get_subject_score(subject_IDs, score='DX_GROUP')
+    labels = np.array(list(map(int, list(labels.values())))) - 1 
     num_nodes = len(subject_IDs)
 
-    # Initialise variables for class labels and acquisition sites
-    y_data = np.zeros([num_nodes, num_classes])
-    site = np.zeros([num_nodes, 1], dtype=np.int)
-
-    # Get class labels and acquisition site for all subjects
-    for i in range(num_nodes):
-        y_data[i, int(labels[subject_IDs[i]])-1] = 1              
-        site[i] = unique.index(sites[subject_IDs[i]])
-    
     # Compute feature vectors (vectorised connectivity networks)
     features = get_networks(subject_IDs, kind=connectivity, atlas_name=atlas)
     
-    labels = list(map(int, list(labels.values()))) 
-    labels = np.array(labels) - 1                                   
-
     # Compute population graph using phenotypic features
     if graph_type == 'original':
         final_graph = create_weighted_adjacency() 
